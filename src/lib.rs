@@ -25,7 +25,7 @@
 //! To print all jpg files in `/media/` and all of its subdirectories.
 //!
 //! ```rust,no_run
-//! use glob::glob;
+//! use glob_sl::glob;
 //!
 //! for entry in glob("/media/**/*.jpg").expect("Failed to read glob pattern") {
 //!     match entry {
@@ -40,8 +40,8 @@
 //! instead of printing them.
 //!
 //! ```rust,no_run
-//! use glob::glob_with;
-//! use glob::MatchOptions;
+//! use glob_sl::glob_with;
+//! use glob_sl::MatchOptions;
 //!
 //! let options = MatchOptions {
 //!     case_sensitive: false,
@@ -59,7 +59,7 @@
 #![doc(
     html_logo_url = "https://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png",
     html_favicon_url = "https://www.rust-lang.org/favicon.ico",
-    html_root_url = "https://docs.rs/glob/0.3.0"
+    html_root_url = "https://docs.rs/glob-sl/0.4.0"
 )]
 #![deny(missing_docs)]
 
@@ -126,7 +126,7 @@ pub struct Paths {
 /// `kittens.jpg`, `puppies.jpg` and `hamsters.gif`:
 ///
 /// ```rust,no_run
-/// use glob::glob;
+/// use glob_sl::glob;
 ///
 /// for entry in glob("/media/pictures/*.jpg").unwrap() {
 ///     match entry {
@@ -150,7 +150,7 @@ pub struct Paths {
 /// `filter_map`:
 ///
 /// ```rust
-/// use glob::glob;
+/// use glob_sl::glob;
 /// use std::result::Result;
 ///
 /// for path in glob("/media/pictures/*.jpg").unwrap().filter_map(Result::ok) {
@@ -356,8 +356,7 @@ impl Iterator for Paths {
             // idx -1: was already checked by fill_todo, maybe path was '.' or
             // '..' that we can't match here because of normalization.
             if idx == !0 as usize {
-                if self.require_dir && !is_dir(&path,
-                                               self.options.follow_links) {
+                if self.require_dir && !is_dir(&path, self.options.follow_links) {
                     continue;
                 }
                 return Some(Ok(path));
@@ -421,8 +420,7 @@ impl Iterator for Paths {
                     // *AND* its children so we don't need to check the
                     // children
 
-                    if !self.require_dir || is_dir(&path,
-                                                   self.options.follow_links) {
+                    if !self.require_dir || is_dir(&path, self.options.follow_links) {
                         return Some(Ok(path));
                     }
                 } else {
@@ -686,7 +684,7 @@ impl Pattern {
     /// # Examples
     ///
     /// ```rust
-    /// use glob::Pattern;
+    /// use glob_sl::Pattern;
     ///
     /// assert!(Pattern::new("c?t").unwrap().matches("cat"));
     /// assert!(Pattern::new("k[!e]tteh").unwrap().matches("kitteh"));
@@ -1104,15 +1102,13 @@ mod test {
             // check windows absolute paths with host/device components
             let root_with_device = current_dir()
                 .ok()
-                .and_then(|p| {
-                    match p.components().next().unwrap() {
-                        Component::Prefix(prefix_component) => {
-                            let path = Path::new(prefix_component.as_os_str());
-                            path.join("*");
-                            Some(path.to_path_buf())
-                        }
-                        _ => panic!("no prefix in this path"),
+                .and_then(|p| match p.components().next().unwrap() {
+                    Component::Prefix(prefix_component) => {
+                        let path = Path::new(prefix_component.as_os_str());
+                        path.join("*");
+                        Some(path.to_path_buf())
                     }
+                    _ => panic!("no prefix in this path"),
                 })
                 .unwrap();
             // FIXME (#9639): This needs to handle non-utf8 paths

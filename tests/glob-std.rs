@@ -12,10 +12,10 @@
 
 #![cfg_attr(test, deny(warnings))]
 
-extern crate glob;
+extern crate glob_sl;
 extern crate tempdir;
 
-use glob::{glob, glob_with};
+use glob_sl::{glob, glob_with};
 use std::env;
 use std::fs;
 use std::path::PathBuf;
@@ -35,8 +35,8 @@ fn main() {
         glob(pattern).unwrap().map(|r| r.unwrap()).collect()
     }
 
-    fn glob_with_vec(pattern: &str, options: &glob::MatchOptions) -> Vec<PathBuf> {
-        glob_with(pattern, options).unwrap().map(|r| r.unwrap()).collect()
+    fn glob_with_vec(pattern: &str, options: &glob_sl::MatchOptions) -> Vec<PathBuf> {
+        glob_with(pattern, options.clone()).unwrap().map(|r| r.unwrap()).collect()
     }
 
     let root = TempDir::new("glob-tests");
@@ -300,10 +300,11 @@ fn main() {
     mk_file("i/qwe/.bbb/.ddd", false);
     mk_file("i/qwe/eee", false);
 
-    let options = glob::MatchOptions {
+    let options = glob_sl::MatchOptions {
         case_sensitive: false,
         require_literal_separator: true,
         require_literal_leading_dot: true,
+        follow_links: false
     };
     assert_eq!(glob_with_vec("i/**/*a*", &options), Vec::<PathBuf>::new());
     assert_eq!(glob_with_vec("i/**/*c*", &options), Vec::<PathBuf>::new());
