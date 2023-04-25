@@ -15,7 +15,7 @@ To use `glob-sl`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-glob = "0.4.0"
+glob = "0.4.1"
 ```
 
 And add this to your crate root:

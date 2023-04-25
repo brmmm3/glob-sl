@@ -1,11 +1,11 @@
 [package]
 name = "glob-sl"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["The Rust Project Developers"]
 license = "MIT/Apache-2.0"
 homepage = "https://github.com/rust-lang/glob-sl"
 repository = "https://github.com/rust-lang/glob-sl"
-documentation = "https://docs.rs/glob-sl/0.4.0"
+documentation = "https://docs.rs/glob-sl/0.4.1"
 description = """
 Support for matching file paths against Unix shell style patterns.
 """
